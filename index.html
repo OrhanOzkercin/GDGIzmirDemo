@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Behind The Scenes</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/agate.min.css"
+      integrity="sha512-wI7oXtzNHj/bqfLA3P6x3XYbcwzsnIKaPLfjjX8ZAXhc65+kSI6sh8gLOOByOKImokAjHUQR0xAJQ/xZTzwuOA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <img src="./logo.png" alt="GDG Izmir Logo" class="logo" />
+
+    <div class="case-buttons mx-auto w-full text-center mt-8">
+      <button
+        type="button"
+        id="case-variable"
+        class="focus:outline-none w-80 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-2xl px-2 py-5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+      >
+        Variable Environment
+      </button>
+      <button
+        type="button"
+        id="case-scope"
+        class="focus:outline-none w-80 text-white bg-rose-900 hover:bg-rose-500 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-2xl px-2 py-5 mr-2 mb-2 dark:focus:ring-yellow-900"
+      >
+        Scope Chain
+      </button>
+      <button
+        type="button"
+        id="case-this"
+        class="focus:outline-none w-80 text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-2xl px-2 py-5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+      >
+        This Keyword
+      </button>
+    </div>
+    <div id="case-buttons-container" class="case-buttons-container flex justify-center mt-2"></div>
+
+    <div class="cases w-full px-6">
+      <div class="case-variable-regular flex mt-8 hide">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code  class="javascript">
+  var myName = "Orhan";
+  var mySurname = "Özkerçin";
+  
+  function logMyAge() {
+    console.log("My age: 25 😥");
+  }
+  
+  logMyAge();
+  console.log("Name: ", myName);
+  console.log("Surname: ", mySurname);    
+</code>
+        </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code>
+  // Console 
+  
+  My age: 25 😥
+  Name:  Orhan
+  Surname:  Özkerçin
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-variable-hoisting flex mt-8 hide">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code  class="javascript">
+  logMyAge();
+  console.log("Name: ", myName);
+  console.log("Surname: ", mySurname);  
+
+  var myName = "Orhan";
+  var mySurname = "Özkerçin";
+  
+  function logMyAge() {
+    console.log("My age: 25 😥");
+  }  
+</code>
+        </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code>
+  // Console 
+  
+  My age: 25 😥
+  Name:  undefined
+  Surname:  undefined
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-variable-tdz flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code  class="javascript">
+  console.log("Name: ", myName);
+  console.log("Surname: ", mySurname);
+
+  let myName = "Orhan";
+  let mySurname = "Özkerçin";
+</code>
+        </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code style="font-size: 2.5rem;">
+  // Console 
+  
+  //Error
+  Uncaught ReferenceError: 
+  Cannot access 'myName' before initialization
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-variable-fn flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code  class="javascript">
+  function logWhatParamsAre() {
+    console.log("arguments: ", arguments);
+  }
+  
+  logWhatParamsAre("Orhan", "Özkerçin");
+</code>
+        </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code>
+  // Console 
+  
+  Arguments: ["Orhan", "Özkerçin"]
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-scope-chain flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code  class="javascript">
+  function getCalculateAgeFn() {
+    let currentYear = 2022;
+    return function calculateAge(bornYear) {
+      return `Your Age is ${currentYear - bornYear}`;
+    };
+  }
+  const calculateAge = getCalculateAgeFn();
+  calculateAge(1997);
+</code>
+        </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code style="font-size: 2.5rem;">
+  // Console 
+  
+  'Your Age is 25'
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-this-global flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre><code class="javascript">
+    console.log(this);
+  </code></pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code>
+  // Console 
+  
+  Window Object // Browser
+  Global Object // NodeJS
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-this-regular flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code class="javascript">
+  function callThis() {
+    console.log(this); // ?
+  }
+</code>
+          </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code>
+  // Console 
+  
+  Window Object
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-this-regular-strict flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code class="javascript">
+  function callThis() {
+    "use strict";
+    console.log(this); // ?
+  }
+</code>
+          </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code >
+  // Console 
+  
+  undefined
+</code>
+        </pre>
+        </div>
+      </div>
+      <div class="case-this-arrow flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+<code class="javascript">
+  const arrThis = () => {
+    console.log(this); // ?
+  };
+  arrThis();
+}</code>
+          </pre>
+        </div>
+        <div class="answer border-2 w-full hide">
+          <pre>
+<code >
+  // Console 
+  
+  Window object
+</code>
+        </pre>
+        </div>
+      </div>
+
+      <div class="case-heap flex mt-8 hide w-full">
+        <div class="question border-2 w-full mr-2">
+          <pre>
+            <code class="javascript">
+              let myAge = 25;
+              let yourAge = myAge;
+              yourAge = 30;
+
+              console.log(myAge) // ?
+
+              let me = {
+                name: "Orhan",
+                age: 25,
+              };
+
+              let friend = me;
+              friend.age = 30;
+
+              console.log(me.age); // ?
+            </code>
+          </pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="heap absolute bottom-0 right-0">
+      <button
+        type="button"
+        id="case-heap"
+        class="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-md px-6 py-2 mr-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+      >
+        Heap
+      </button>
+    </div>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"
+      integrity="sha512-bgHRAiTjGrzHzLyKOnpFvaEpGzJet3z4tZnXGjpsCcqOnAH6VGUx9frc5bcIhKTVLEiCO6vEhNAgx5jtLUYrfA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+    <script src="./app.js"></script>
+    <!-- <script src="./this_regular.js"></script> -->
+  </body>
+</html>
